@@ -1,15 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ ! -d "/var/lib/mysql/$SQL_DATABASE" ]; then
-    mysqld_safe --datadir=/var/lib/mysql&
-    sleep 1
+service mariadb start
 
-mysql -e "CREATE DATABASE $SQL_DATABASE;"
-mysql -e "CREATE USER $SQL_USER@'%' IDENTIFIED BY '$SQL_PASSWORD';"
-mysql -e "GRANT ALL PRIVILEGES ON $SQL_DATABASE.* TO $SQL_USER@'%';"
-mysql -e "FLUSH PRIVILEGES;"
+mariadb -v -u root << 42BABY
+CREATE DATABASE IF NOT EXISTS $SQL_DATABASE;
+CREATE USER IF NOT EXISTS '$SQL_USER'@'%' IDENTIFIED BY '$SQL_PASSWORD';
+GRANT ALL PRIVILEGES ON $SQL_DATABASE.* TO '$SQL_USER'@'%' IDENTIFIED BY '$SQL_PASSWORD';
+GRANT ALL PRIVILEGES ON $SQL_DATABASE.* TO 'root'@'%' IDENTIFIED BY '$SQL_ROOT_PASSWORD';
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('$SQL_ROOT_PASSWORD');
+42BABY
 
-mysqladmin -u root shutdown
-fi
+sleep 5
 
-exec mysqld_safe --datadir=/var/lib/mysql
+service mariadb stop
+
+exec mysqld_safe 
