@@ -1,27 +1,52 @@
 name = inception
 
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL = all
 
 USERNAME = rcarvalh
-FIRSTNAME = Rodrigo
+FIRSTNAME = rodrigo
 
-ENV_CONTENT = " DOMAIN_NAME=$(USERNAME).42.fr			\n\
-CERT_=./requirements/tools/$(USERNAME).42.fr			\n\
-KEY_=./requirements/tools/$(USERNAME).42.fr			\n\
-DB_NAME=wordpress						\n\
-DB_ROOT=rootpass						\n\
-DB_USER=wpuser							\n\
-DB_PASS=wppass							\n\
-DB_HOST=mariadb							\n\
-WP_TITLE=Teste							\n\
-ADM_WP_NAME=$(USERNAME)@42.fr					\n\
-ADM_WP_PASS=$(USERNAME)						\n\
-ADM_WP_EMAIL=$(USERNAME)@42.fr					\n\
-WP_USERNAME=$(FIRSTNAME)@42.fr					\n\
-WP_USEREMAIL=$(FIRSTNAME)@42.fr					\n\
-WP_USERPASS=$(FIRSTNAME)					\n\
-WP_HOST=$(USERNAME).42.fr					\n\
-FTP_USR=ftpuser							\n\
+DB_HOST = mariadb
+DB_NAME = wordpress
+DB_ROOT = rootpass
+DB_USER = wpuser
+DB_PASS = wppass
+
+ADM_WP_NAME=$(USERNAME)@42.fr
+ADM_WP_PASS=$(USERNAME)
+ADM_WP_EMAIL=$(USERNAME)@42.fr
+
+WP_USERNAME=$(FIRSTNAME)@42.fr
+WP_USEREMAIL=$(FIRSTNAME)@42.fr
+WP_USERPASS=$(FIRSTNAME)
+
+ENV_CONTENT = "\# Domain:\n\
+DOMAIN_NAME=$(USERNAME).42.fr\n\
+\n\
+\# Certificates:\n\
+CERT_=./requirements/nginx/tools/$(USERNAME).42.fr\n\
+KEY_=./requirements/nginx/tools/$(USERNAME).42.fr\n\
+\n\
+\# Database:\n\
+DB_NAME=$(DB_NAME)\n\
+DB_ROOT=$(DB_ROOT)\n\
+DB_USER=$(DB_USER)\n\
+DB_PASS=$(DB_PASS)\n\
+DB_HOST=$(DB_HOST)\n\
+\n\
+\# Wordpress\n\
+WP_TITLE=Inception_Rodrigo\n\
+WP_HOST=$(USERNAME).42.fr\n\
+\n\
+ADM_WP_NAME=$(USERNAME)@42.fr\n\
+ADM_WP_PASS=$(USERNAME)\n\
+ADM_WP_EMAIL=$(USERNAME)@42.fr\n\
+\n\
+WP_USERNAME=$(FIRSTNAME)@42.fr\n\
+WP_USEREMAIL=$(FIRSTNAME)@42.fr\n\
+WP_USERPASS=$(FIRSTNAME)\n\
+\n\
+\# FTP\n\
+FTP_USR=ftpuser\n\
 FTP_PWD=ftppasss"
 
 setup: docker certs env
@@ -34,7 +59,7 @@ sudoers:
 docker: sudoers
 	@sleep 3
 	@echo "\nInstalling Docker..."
-	sudo apt install -y ufw docker docker-compose openbox xinit kitty filezilla firefox-esr
+	sudo apt install -y docker docker-compose filezilla
 	sudo usermod -aG docker $(USER)
 	@echo "\nDocker installed successfully!"
 	@echo "User $(USERNAME) added to Docker group."
@@ -57,10 +82,13 @@ env:
 	@echo "\nFile .env generated."
 	
 info:
-	@echo "Pontainer: https://$(USERNAME).42.fr:9443"
+	@echo "Portainer: https://$(USERNAME).42.fr:9443"
 	@echo "Wordpress Login: https://$(USERNAME).42.fr/wp-login.php"
+	@echo "    User: $(WP_USERNAME) Email: $(WP_USEREMAIL) Password: $(WP_USERPASS)"
+	@echo "    Admin: $(ADM_WP_NAME) Email: $(ADM_WP_EMAIL) Password: $(ADM_WP_PASS)"
 	@echo "Redis run-check: docker exec -it redis redis-cli monitor"
 	@echo "Adminer DB: localhost:8080"
+	@echo "    System: MySQL Server: $(DB_HOST) User: $(DB_USER) Password: $(DB_PASS) Database: $(DB_NAME)"
 
 all:
 	@printf "Launching ${name}...\n"
@@ -78,6 +106,7 @@ down:
 
 re:
 	@printf "Rebuilding  ${name}...\n"
+	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
 
 clean: down
@@ -86,13 +115,11 @@ clean: down
 	@sudo rm -rf ~/data/wordpress/*
 	@sudo rm -rf ~/data/mariadb/*
 
-fclean:
+fclean: down
 	@printf "Total clean of all docker config\n"
-	@docker stop $$(docker ps -qa)
 	@docker system prune --all --force --volumes
 	@docker network prune --force
 	@docker volume prune --force
-	@sudo rm -rf ~/data/wordpress/*
-	@sudo rm -rf ~/data/mariadb/*
+	@sudo rm -rf ~/data
 	
 .PHONY	: all build down re clean fclean sudoers docker info certs env setup
