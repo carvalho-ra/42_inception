@@ -134,6 +134,7 @@ fclean: down
 	@docker system prune --all --force --volumes
 	@docker network prune --force
 	@docker volume prune --force
+	rm srcs/.env srcs/requirements/nginx/tools/*
 	@sudo rm -rf ~/data
 	
 .PHONY	: all build down re clean fclean sudoers docker info certs env setup
