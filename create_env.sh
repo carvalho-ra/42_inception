@@ -45,7 +45,7 @@ WP_USERPASS=${FIRSTNAME}\n\
 \n\
 # FTP\n\
 FTP_USR=ftpuser\n\
-FTP_PWD=ftppasss"
+FTP_PWD=ftppass"
 
 echo ${USERNAME}
 echo ${ENV_CONTENT} > srcs/.env
