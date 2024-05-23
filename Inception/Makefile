@@ -42,13 +42,13 @@ all:
 	@printf "Launching ${name}...\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d
-	sudo chmod -R 777 ~/data
+	@sudo chmod -R 777 ~/data
 
 build:
 	@printf "Building  ${name}...\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
-	sudo chmod -R 777 ~/data
+	@sudo chmod -R 777 ~/data
 
 down:
 	@printf "Stopping ${name}...\n"
@@ -58,7 +58,7 @@ re: fclean env certs
 	@printf "Rebuilding  ${name}...\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
-	sudo chmod -R 777 ~/data
+	@sudo chmod -R 777 ~/data
 
 clean: down
 	@printf "Cleaning  ${name}...\n"
