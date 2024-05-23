@@ -17,6 +17,9 @@ WP_USERNAME=${FIRSTNAME}@42.fr
 WP_USEREMAIL=${FIRSTNAME}@42.fr
 WP_USERPASS=${FIRSTNAME}
 
+FTP_USR=ftpuser
+FTP_PWD=ftppass
+
 echo "Wordpress: https://${USERNAME}.42.fr"
 echo "           https://${USERNAME}.42.fr/wp-login.php"
 echo "    User: ${WP_USERNAME}"
@@ -35,7 +38,7 @@ echo "    User: ${DB_USER}"
 echo "    Password: ${DB_PASS}"
 echo "    Database: ${DB_NAME}"
 echo "Vsftpd: FileZilla"
-echo "    Host: ftp://${USERNAME}.42.fr"
-echo "    Username: ${DB_USER}"
-echo "    Password: ${DB_PASS}"
-echo "    Port: 443"
+echo "    Host: ${USERNAME}.42.fr"
+echo "    Username: ${FTP_USR}"
+echo "    Password: ${FTP_PWD}"
+echo "    Port: none"
