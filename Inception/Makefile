@@ -34,7 +34,7 @@ DB_PASS=$(DB_PASS)\n\
 DB_HOST=$(DB_HOST)\n\
 \n\
 \# Wordpress\n\
-WP_TITLE=Inception_Rodrigo\n\
+WP_TITLE=$(USERNAME)\n\
 WP_HOST=$(USERNAME).42.fr\n\
 \n\
 ADM_WP_NAME=$(USERNAME)@42.fr\n\
@@ -82,7 +82,7 @@ env:
 	@echo "\nFile .env generated."
 	
 info:
-	@echo "Wordpress Login: https://$(USERNAME).42.fr/wp-login.php"
+	@echo "Wordpress Login: https://$(USERNAME).42.fr https://$(USERNAME).42.fr/wp-login.php"
 	@echo "    User: $(WP_USERNAME)"
 	@echo "    Email: $(WP_USEREMAIL)"
 	@echo "    Password: $(WP_USERPASS)"
@@ -118,15 +118,17 @@ down:
 	@printf "Stopping ${name}...\n"
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env down
 
-re:
+re: fclean env certs
 	@printf "Rebuilding  ${name}...\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
 
 clean: down
 	@printf "Cleaning  ${name}...\n"
-	@docker system prune -a
-	@sudo rm -rf ~/data
+	@docker container prune --force
+	@docker image prune --force
+	@sudo rm -rf ~/data/mariadb/*
+	@sudo rm -rf ~/data/wordpress/*
 
 fclean: down
 	@printf "Total clean of all docker config\n"
