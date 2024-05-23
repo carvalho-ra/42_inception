@@ -118,15 +118,17 @@ down:
 	@printf "Stopping ${name}...\n"
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env down
 
-re:
+re: fclean env certs
 	@printf "Rebuilding  ${name}...\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
 
 clean: down
 	@printf "Cleaning  ${name}...\n"
-	@docker system prune -a
-	@sudo rm -rf ~/data
+	@docker container prune --force
+	@docker image prune --force
+	@sudo rm -rf ~/data/mariadb/*
+	@sudo rm -rf ~/data/wordpress/*
 
 fclean: down
 	@printf "Total clean of all docker config\n"
