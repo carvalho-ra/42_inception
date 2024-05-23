@@ -1,5 +1,5 @@
-FROM alpine:3.18
-ARG PHP_VERSION=81 \
+FROM alpine:3.19
+ARG PHP_VERSION=82 \
     DB_NAME \
     DB_USER \
     DB_PASS \ 
@@ -43,11 +43,11 @@ RUN apk update && apk upgrade && apk add --no-cache \
     wget \
     unzip && \
     sed -i "s|listen = 127.0.0.1:9000|listen = 9000|g" \
-      /etc/php81/php-fpm.d/www.conf && \
+      /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
     sed -i "s|;listen.owner = nobody|listen.owner = nobody|g" \
-      /etc/php81/php-fpm.d/www.conf && \
+      /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
     sed -i "s|;listen.group = nobody|listen.group = nobody|g" \
-      /etc/php81/php-fpm.d/www.conf && \
+      /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
     rm -f /var/cache/apk/*
 WORKDIR /var/www
 RUN wget https://wordpress.org/latest.zip && \
@@ -58,4 +58,4 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
     && chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
 COPY ./requirements/wordpress/conf/wp-config-create.sh .
 RUN chmod +x /var/www/wp-config-create.sh && chmod -R 0777 wp-content/
-CMD ["/bin/sh", "-c", "/var/www/wp-config-create.sh && /usr/sbin/php-fpm81 -F"]
+CMD ["/bin/sh", "-c", "/var/www/wp-config-create.sh && /usr/sbin/php-fpm82 -F"]

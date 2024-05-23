@@ -5,50 +5,6 @@ name = inception
 USERNAME = rcarvalh
 FIRSTNAME = rodrigo
 
-DB_HOST = mariadb
-DB_NAME = wordpress
-DB_ROOT = rootpass
-DB_USER = wpuser
-DB_PASS = wppass
-
-ADM_WP_NAME=$(USERNAME)@42.fr
-ADM_WP_PASS=$(USERNAME)
-ADM_WP_EMAIL=$(USERNAME)@42.fr
-
-WP_USERNAME=$(FIRSTNAME)@42.fr
-WP_USEREMAIL=$(FIRSTNAME)@42.fr
-WP_USERPASS=$(FIRSTNAME)
-
-ENV_CONTENT = "\# Domain:\n\
-DOMAIN_NAME=$(USERNAME).42.fr\n\
-\n\
-\# Certificates:\n\
-CERT_=./requirements/nginx/tools/$(USERNAME).42.fr\n\
-KEY_=./requirements/nginx/tools/$(USERNAME).42.fr\n\
-\n\
-\# Database:\n\
-DB_NAME=$(DB_NAME)\n\
-DB_ROOT=$(DB_ROOT)\n\
-DB_USER=$(DB_USER)\n\
-DB_PASS=$(DB_PASS)\n\
-DB_HOST=$(DB_HOST)\n\
-\n\
-\# Wordpress\n\
-WP_TITLE=$(USERNAME)\n\
-WP_HOST=$(USERNAME).42.fr\n\
-\n\
-ADM_WP_NAME=$(USERNAME)@42.fr\n\
-ADM_WP_PASS=$(USERNAME)\n\
-ADM_WP_EMAIL=$(USERNAME)@42.fr\n\
-\n\
-WP_USERNAME=$(FIRSTNAME)@42.fr\n\
-WP_USEREMAIL=$(FIRSTNAME)@42.fr\n\
-WP_USERPASS=$(FIRSTNAME)\n\
-\n\
-\# FTP\n\
-FTP_USR=ftpuser\n\
-FTP_PWD=ftppasss"
-
 setup: docker certs env
 	@echo "Base Setup installed. System will reboot in 5s..."
 	@sleep 5 && sudo reboot now
@@ -77,32 +33,10 @@ certs:
 	@echo "\nRoutes created successfully."
 	
 env:
-	@sleep 1
-	@echo $(ENV_CONTENT) > srcs/.env
-	@echo "\nFile .env generated."
+	../create_env.sh
 	
 info:
-	@echo "Wordpress Login: https://$(USERNAME).42.fr https://$(USERNAME).42.fr/wp-login.php"
-	@echo "    User: $(WP_USERNAME)"
-	@echo "    Email: $(WP_USEREMAIL)"
-	@echo "    Password: $(WP_USERPASS)"
-	@echo "    Admin: $(ADM_WP_NAME)"
-	@echo "    Email: $(ADM_WP_EMAIL)"
-	@echo "    Password: $(ADM_WP_PASS)"
-	@echo "Portainer: https://$(USERNAME).42.fr:9443"
-	@echo "Website: http://localhost http://$(USERNAME).42.fr"
-	@echo "Redis run-check: docker exec -it redis redis-cli monitor"
-	@echo "Adminer DB: http://localhost:8080"
-	@echo "    System: MySQL"
-	@echo "    Server: $(DB_HOST)"
-	@echo "    User: $(DB_USER)"
-	@echo "    Password: $(DB_PASS)"
-	@echo "    Database: $(DB_NAME)"
-	@echo "Vsftpd: FileZilla"
-	@echo "    Host: ftp://$(USERNAME).42.fr"
-	@echo "    Username: $(DB_USER)"
-	@echo "    Password: $(DB_PASS)"
-	@echo "    Port: 443"
+	../info.sh
 
 all:
 	@printf "Launching ${name}...\n"
@@ -131,7 +65,7 @@ clean: down
 	@sudo rm -rf ~/data/wordpress/*
 
 fclean: down
-	@printf "Total clean of all docker config\n"
+	@printf "Clean of all docker configs\n"
 	@docker system prune --all --force --volumes
 	@docker network prune --force
 	@docker volume prune --force

@@ -1,4 +1,4 @@
-FROM alpine:3.18
+FROM alpine:3.19
 RUN	apk update && apk upgrade && apk add --no-cache nginx
 
 RUN echo "server {" > /etc/nginx/http.d/default.conf && \
