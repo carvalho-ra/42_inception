@@ -11,6 +11,7 @@ setup: docker certs env
 
 sudoers:
 	@sudo echo -ne "Checking Sudo... " || exit 1 && echo OK!
+	@echo "$(USER) ALL=(ALL) NOPASSWD: /bin/chmod" | sudo tee /etc/sudoers.d/$(USER)-chmod
 
 docker: sudoers
 	@sleep 3
@@ -42,13 +43,13 @@ all:
 	@printf "Launching ${name}...\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d
-	@sudo chmod -R 777 ~/data
+	@sudo chmod -R 777 ../data
 
 build:
 	@printf "Building  ${name}...\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
-	@sudo chmod -R 777 ~/data
+	@sudo chmod -R 777 ../data
 
 down:
 	@printf "Stopping ${name}...\n"
@@ -58,7 +59,7 @@ re: fclean env certs
 	@printf "Rebuilding  ${name}...\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
-	@sudo chmod -R 777 ~/data
+	@sudo chmod -R 777 ../data
 
 clean: down
 	@printf "Cleaning  ${name}...\n"
@@ -74,5 +75,9 @@ fclean: down
 	@docker volume prune --force
 	rm srcs/.env srcs/requirements/nginx/tools/*
 	@sudo rm -rf ~/data
+
+remove_sudoers:
+	@sudo rm /etc/sudoers.d/$(USER)-chmod
+	@echo "Removed sudoers configuration for $(USER)"
 	
-.PHONY	: all build down re clean fclean sudoers docker info certs env setup
+.PHONY	: all build down re clean fclean sudoers docker info certs env setup remove_sudoers
