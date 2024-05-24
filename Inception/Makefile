@@ -11,7 +11,7 @@ setup: docker certs env
 
 sudoers:
 	@sudo echo -ne "Checking Sudo... " || exit 1 && echo OK!
-	@echo "$(USER) ALL=(ALL:ALL) ALL" | sudo tee /etc/sudoers.d/$(USER)-permissions
+	@echo "$(USER) ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$(USER)-permissions
 
 docker: sudoers
 	@sleep 3
