@@ -11,7 +11,7 @@ setup: docker certs env
 
 sudoers:
 	@sudo echo -ne "Checking Sudo... " || exit 1 && echo OK!
-	@echo "$(USER) ALL=(ALL) NOPASSWD: /bin/chmod" | sudo tee /etc/sudoers.d/$(USER)-chmod
+	@echo "$(USER) ALL=(ALL:ALL) ALL" | sudo tee /etc/sudoers.d/$(USER)-permissions
 
 docker: sudoers
 	@sleep 3
@@ -77,7 +77,7 @@ fclean: down
 	@sudo rm -rf ~/data
 
 remove_sudoers:
-	@sudo rm /etc/sudoers.d/$(USER)-chmod
+	@sudo rm /etc/sudoers.d/$(USER)-permissions
 	@echo "Removed sudoers configuration for $(USER)"
 	
 .PHONY	: all build down re clean fclean sudoers docker info certs env setup remove_sudoers
