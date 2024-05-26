@@ -63,17 +63,20 @@ re: fclean env certs
 
 clean: down
 	@printf "Cleaning  ${name}...\n"
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env down --volumes
 	@docker container prune --force
 	@docker image prune --force
-	@sudo rm -f ~/data/mariadb/*
-	@sudo rm -f ~/data/wordpress/*
+	@sudo rm -rf ~/data/mariadb/*
+	@sudo rm -rf ~/data/wordpress/*
 
 fclean: down
 	@printf "Clean of all docker configs\n"
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env down --volumes
+	@docker image prune --all --force
 	@docker system prune --all --force --volumes
 	@docker network prune --force
 	@docker volume prune --force
-	rm srcs/.env srcs/requirements/nginx/tools/*
+	@rm srcs/.env srcs/requirements/nginx/tools/*
 	@sudo rm -rf ~/data
 
 remove_sudoers:

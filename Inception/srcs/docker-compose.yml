@@ -11,12 +11,12 @@ services:
       - wordpress
     ports:
       - "443:443"
-    networks:
-      - inception
     volumes:
       - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - wp-volume:/var/www/
+    networks:
+      - inception
     restart: always
 
   mariadb:
@@ -32,10 +32,10 @@ services:
     image: mariadb
     ports:
       - "3306:3306"
-    networks:
-      - inception
     volumes:
       - db-volume:/var/lib/mysql
+    networks:
+      - inception
     restart: always
 
   wordpress:
@@ -59,10 +59,10 @@ services:
     image: wordpress
     depends_on:
       - mariadb
-    networks:
-      - inception
     volumes:
       - wp-volume:/var/www/
+    networks:
+      - inception
     restart: always
 
   redis:
@@ -120,6 +120,8 @@ services:
     image: website
     ports:
       - "80:80"
+    networks:
+     - inception
     restart: always
 
   portainer:
@@ -130,23 +132,29 @@ services:
     volumes:
         - data:/data
         - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+     - inception
     restart: always
 
 volumes:
   wp-volume:
+    name: wordpress
     driver_opts:
       o: bind
       type: none
       device: /home/${USER}/data/wordpress
 
   db-volume:
+    name: mariadb
     driver_opts:
       o: bind
       type: none
       device: /home/${USER}/data/mariadb
 
   data:
+    name: data
   
 networks:
     inception:
+        name: inception
         driver: bridge
