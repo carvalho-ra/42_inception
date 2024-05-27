@@ -42,14 +42,14 @@ info:
 all:
 	@printf "Launching ${name}...\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
-	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d
-	@sudo chmod -R 777 ../data
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
+	@sudo chmod -R 777 ~/data
 
 build:
 	@printf "Building  ${name}...\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
-	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
-	@sudo chmod -R 777 ../data
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env build
+	@sudo chmod -R 777 ~/data
 
 down:
 	@printf "Stopping ${name}...\n"
@@ -59,10 +59,11 @@ re: fclean env certs
 	@printf "Rebuilding  ${name}...\n"
 	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
-	@sudo chmod -R 777 ../data
+	@sudo chmod -R 777 ~/data
 
 clean: down
 	@printf "Cleaning  ${name}...\n"
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env down --volumes
 	@docker container prune --force
 	@docker image prune --force
 	@sudo rm -rf ~/data/mariadb/*
@@ -70,10 +71,12 @@ clean: down
 
 fclean: down
 	@printf "Clean of all docker configs\n"
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env down --volumes
+	@docker image prune --all --force
 	@docker system prune --all --force --volumes
 	@docker network prune --force
 	@docker volume prune --force
-	rm srcs/.env srcs/requirements/nginx/tools/*
+	@rm srcs/.env srcs/requirements/nginx/tools/*
 	@sudo rm -rf ~/data
 
 remove_sudoers:
