@@ -6,11 +6,11 @@ This project aims to broaden your knowledge of system administration by using Do
 
 ### 🛠️ Usage
 
-###Docker schem
+### Docker schem
 
 ![docker_schem.png](docker_schem.png)
 
-###Network diagram
+### Network diagram
 
 ![net_diagram.png](net_diagram.png)
 
