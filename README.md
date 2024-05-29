@@ -4,8 +4,6 @@
 
 This project aims to broaden your knowledge of system administration by using Docker. You will virtualize several Docker images, creating them in your new personal virtual machine.
 
-### 🛠️ Usage
-
 ### Docker schem
 
 ![docker_schem.png](docker_schem.png)
@@ -13,6 +11,8 @@ This project aims to broaden your knowledge of system administration by using Do
 ### Network diagram
 
 ![net_diagram.png](net_diagram.png)
+
+### 🛠️ Usage
 
 In a linux Ubuntu based Virtual Machine put your user in sudo group ```usermod -aG sudo <your_username>```
 
