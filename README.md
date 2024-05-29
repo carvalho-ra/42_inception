@@ -6,6 +6,14 @@ This project aims to broaden your knowledge of system administration by using Do
 
 ### 🛠️ Usage
 
+###Docker schem
+
+![docker_schem.png](docker_schem.png)
+
+###Network diagram
+
+![net_diagram.png](net_diagram.png)
+
 In a linux Ubuntu based Virtual Machine put your user in sudo group ```usermod -aG sudo <your_username>```
 
 Copy base files to folder of choice
