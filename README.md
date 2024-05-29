@@ -6,11 +6,11 @@ This project aims to broaden your knowledge of system administration by using Do
 
 ### Docker schem
 
-<img src="docker_schem.png" alt="Docker Schem" width="400">
+<img src="docker_schem.png" alt="Docker Schem" width="800">
 
 ### Network diagram
 
-<img src="net_diagram.png" alt="Network Diagram" width="400">
+<img src="net_diagram.png" alt="Network Diagram" width="800">
 
 ### 🛠️ Usage
 
@@ -24,4 +24,4 @@ Run project using the provided Makefile: ```make```
 
 ### 📋 Results
 
-<img src="inception.png" alt="Inception Results" width="400">
+<img src="inception.png" alt="Inception Results" width="800">
