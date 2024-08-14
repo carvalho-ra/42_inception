@@ -18,7 +18,7 @@ docker: sudoers
 	@echo "Installing Docker..."
 	
 	@echo "Adding Docker's official GPG key..."
-	@sudo apt update
+	@sudo apt update -y && sudo apt upgrade -y
 	@sudo apt install -y ca-certificates curl
 	@sudo install -m 0755 -d /etc/apt/keyrings
 	@sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
